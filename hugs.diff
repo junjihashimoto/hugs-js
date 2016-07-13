@@ -1,0 +1,74 @@
+--- ../hugs98-Sep2006-native/src/hugs.c	2016-06-20 00:32:14.740122041 +0900
++++ src/hugs.c	2016-07-14 02:55:05.408784877 +0900
+@@ -33,7 +33,7 @@
+  * ------------------------------------------------------------------------*/
+ 
+ static Void   local interpreter       Args((Int,String []));
+-static Void   local initInterpreter   Args((Void));
++extern Void   local initInterpreter   Args((Void));
+ static Void   local menu              Args((Void));
+ static Void   local guidance          Args((Void));
+ static Void   local forHelp           Args((Void));
+@@ -159,9 +159,9 @@
+ /* --------------------------------------------------------------------------
+  * Printing the banner
+  * ------------------------------------------------------------------------*/
+-static Void printBanner Args((Void));
++extern Void printBanner Args((Void));
+ 
+-static Void printBanner()
++Void printBanner()
+ {
+ #if SMALL_BANNER
+     Printf("Hugs98 - http://haskell.org/hugs - %s\n", versionString);
+@@ -953,6 +953,32 @@
+  * main read-eval-print loop, with error trapping:
+  * ------------------------------------------------------------------------*/
+ 
++/* --------------------------------------------------------------------------
++ * main read-eval-print loop, with error trapping:
++ * ------------------------------------------------------------------------*/
++
++extern Void local interpreterNoLoop()
++{
++    Int errorNumber = setjmp(catch_error);
++
++    breakOn(TRUE);                      /* enable break trapping           */
++    if ( numLoadedScripts()==0 ) {      /* only succeeds on first time,    */
++	if (errorNumber)                /* before Prelude has been loaded  */
++	    fatal("Unable to load Prelude");
++        String agv[] = {"hugs"};
++	initialize(1,agv);
++	forHelp();
++    }
++
++#if defined(_MSC_VER) && !defined(_MANAGED)
++    /* Under Win32 (when compiled with MSVC), we specially
++     * catch and handle SEH stack overflows.
++     */
++    __try {
++#endif
++
++}
++
+ static Void local interpreter(argc,argv)/* main interpreter loop           */
+ Int    argc;
+ String argv[]; {
+@@ -1028,7 +1054,7 @@
+ #endif
+ }
+ 
+-static Void local initInterpreter()
++Void local initInterpreter()
+ {
+     everybody(RESET);               /* reset to sensible initial state */
+     dropScriptsFrom(numLoadedScripts()-1); 
+@@ -1038,7 +1064,7 @@
+     promptForInput(textToStr(module(findEvalModule()).text));
+ }
+ 
+-Bool doCommand()		    /* read and execute a command      */
++extern Bool doCommand()		    /* read and execute a command      */
+ {				    /* returns TRUE on QUIT (:quit)    */
+ 	Command cmd;
+ 	cmd = readCommand(cmds, (Char)':', (Char)'!');
