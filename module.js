@@ -121,7 +121,7 @@ var Module = {
 		    var i, j, r = [];
 		    for(i = 0, j = data.selected.length; i < j; i++) {
 			//r.push(data.instance.get_node(data.selected[i]).text);
-			FS.readFile(getPath(data.selected[i].node.id));
+			ace_editor.setValue(FS.readFile(getPath(data.selected[i]), { encoding: 'utf8' }));
 		    }
 		});
 
