@@ -105,7 +105,7 @@ var Module = {
 		    "id": getIdPath(cpath),
 		    "text": dirnames[i],
 		    "parent": obj.id,
-		    "children": FS.isDir(cpath)
+		    "children": FS.isDir(FS.lookupPath(cpath).node.mode)
 		});
 	    }
 	    return dirs;
@@ -117,7 +117,13 @@ var Module = {
                     var hoge = gentree(obj);
                     cb.call(this,hoge);
                 }
-            }});
+            }}).on('changed.jstree', function (e, data) {
+		    var i, j, r = [];
+		    for(i = 0, j = data.selected.length; i < j; i++) {
+			//r.push(data.instance.get_node(data.selected[i]).text);
+			FS.readFile(getPath(data.selected[i].node.id));
+		    }
+		});
 
     }],
     print: (function() {
