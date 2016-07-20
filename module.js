@@ -56,6 +56,10 @@ var Module = {
             }
             return tty.input.shift();
         }
+        var file = "Main.hs";
+        FS.writeFile(file,"main = do\n    print 123");
+	ace_editor.setValue(FS.readFile(file, { encoding: 'utf8' }));
+	document.getElementById('filepath').value = "/"+file;
         Module.ccall('initSystem',null,[],[]);
         Module.ccall('printBanner',null,[],[]);
         Module.ccall('interpreterNoLoop',null,[],[]);
@@ -100,7 +104,7 @@ var Module = {
 	    var path = getPath(obj.id);
 	    dirnames = getDirs(path);
 	    for(var i = 0 ; i< dirnames.length ; i++){
-		var cpath = path + "/" +dirnames[i];	
+		var cpath = (path == "/" ? "" : path) + "/" +dirnames[i];	
 	dirs.push({
 		    "id": getIdPath(cpath),
 		    "text": dirnames[i],
@@ -122,6 +126,7 @@ var Module = {
 		    for(i = 0, j = data.selected.length; i < j; i++) {
 			//r.push(data.instance.get_node(data.selected[i]).text);
 			ace_editor.setValue(FS.readFile(getPath(data.selected[i]), { encoding: 'utf8' }));
+			document.getElementById('filepath').value = getPath(data.selected[i]);
 		    }
 		});
 

@@ -11,8 +11,8 @@
     <script src="./js/jquery-1.11.2.min.js"></script>
     <script src="./js/bootstrap.min.js"></script>
     <script src="./js/ace.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" > 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+    <link rel="stylesheet" href="./css/style.min.css" > 
+    <script src="./js/jstree.min.js"></script>
     <link href="./css/docs.min.css" rel="stylesheet">
     <link href="./css/em.css" rel="stylesheet">
   </head>
@@ -25,7 +25,7 @@
     </div>
     <div class="container"  style="border: 1px solid;">
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-2">
         <div class="btn-group">
           <button type="button" class="btn" id="save-btn">
             <span class="glyphicon glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
@@ -35,17 +35,11 @@
           </button>
         </div>
         </div>
+        <div class="col-md-10" ><input type="text" class="form-control" placeholder="Text input" id="filepath"></div>
       </div>
       <div class="row" style="border: 1px solid;">
         <div class="col-md-4">
           <div id="jstree">
-            <ul>
-              <li>/
-                <ul>
-                  <li>main.hs</li>
-                </ul>             
-              </li>
-            </ul>
           </div>
         </div>
         <div class="col-md-8">
@@ -58,7 +52,9 @@
             ace_editor.setOptions({
               enableBasicAutocompletion: true,
               enableSnippets: true,
-              enableLiveAutocompletion: true
+              enableLiveAutocompletion: true,
+              maxLines: Infinity,
+              minLines: 5
             });
             ace_editor.setTheme("ace/theme/monokai");
             ace_editor.getSession().setMode("ace/mode/javascript");

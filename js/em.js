@@ -15,20 +15,20 @@ function SendCommand(){
     DoCommand(document.getElementById('line').value);
 }
 function PlayCommand(){
-    DoCommand(":load main.hs");
+    DoCommand(":load "+	document.getElementById('filepath').value);
     DoCommand(":main");
 }
 
 (function(){
   document.getElementById('save-btn').addEventListener('click',
     function(ev){
-        FS.writeFile('main.hs',ace_editor.getValue(),null);
+        FS.writeFile(document.getElementById('filepath').value,ace_editor.getValue(),null);
 //      FS.writeeditor.getValue()
     }
   );
   document.getElementById('play-btn').addEventListener('click',
     function(ev){
-      FS.writeFile('main.hs',ace_editor.getValue(),null)
+      FS.writeFile(document.getElementById('filepath').value,ace_editor.getValue(),null)
       PlayCommand();
     }
   );
