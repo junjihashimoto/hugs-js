@@ -11,179 +11,73 @@
     <script src="./js/jquery-1.11.2.min.js"></script>
     <script src="./js/bootstrap.min.js"></script>
     <script src="./js/ace.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" > 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
     <link href="./css/docs.min.css" rel="stylesheet">
     <link href="./css/em.css" rel="stylesheet">
   </head>
   <body>
     <div class="bs-docs-header" id="content" tabindex="-1"> 
       <div class="container"> 
-	<h1>Hugs with ACE Editor</h1> 
+	<p>Hugs with ACE Editor</p> 
 	<p>Write haskell code. Then type ":load main.hs"</p> 
       </div>
     </div>
     <div class="container">
       <div class="row">
-          <div class="btn-group">
-            <button type="button" class="btn btn-primary" id="save-btn">Save</button>
-            <button type="button" class="btn" id="save-btn">Load</button>
-          </div>
-        <div class="span9">
+        <div class="col-md-12">
+        <div class="btn-group">
+          <button type="button" class="btn" id="save-btn">
+            <span class="glyphicon glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn" id="play-btn">
+            <span class="glyphicon glyphicon glyphicon glyphicon-play" aria-hidden="true"></span>
+          </button>
         </div>
-        <div class="span9">
-          <div id="editor" style="height: 300px;width: auto"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div id="jstree" style="border: 1px solid; height: 100%">
+            <ul>
+              <li>/
+                <ul>
+                  <li>main.hs</li>
+                </ul>             
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div id="editor" style="height: 600px"></div>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ext-language_tools.js"></script>
           <script>
             ace_editor = ace.edit("editor");
+            ace_editor.$blockScrolling = Infinity;
+            ace_editor.setOptions({
+              enableBasicAutocompletion: true,
+              enableSnippets: true,
+              enableLiveAutocompletion: true
+            });
+            ace_editor.setTheme("ace/theme/monokai");
+            ace_editor.getSession().setMode("ace/mode/javascript");
             ace_editor.getSession().setMode("ace/mode/haskell");
           </script>
         </div>
-        <div class="span9">
-          <div class="span9">
-            <textarea id="output" rows="8"></textarea>
-          </div>
-          <div class="span9">
-          <form onSubmit="SendCommand();return false;">
-            Hugs &gt <input type="text" id="line" style="width:90%">
-          </form>
-          </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <textarea id="output" rows="8"></textarea>
+        </div>
+        <div class="col-md-12">
+        <form onSubmit="SendCommand();return false;">
+          Hugs &gt <input type="text" id="line" style="width:90%">
+        </form>
         </div>
       </div>
     </div>
-        <script type='text/javascript'>
-          var statusElement = document.getElementById('status');
-          var progressElement = document.getElementById('progress');
-          var spinnerElement = document.getElementById('spinner');
-    
-          var Module = {
-            noInitialRun: true,
-            preRun: [],
-            postRun: [function(){
-              TTY.default_tty_ops.get_char=function (tty) {
-                if (!tty.input.length) {
-                  var result = null;
-                  if (ENVIRONMENT_IS_NODE) {
-                    // we will read data by chunks of BUFSIZE
-                    var BUFSIZE = 256;
-                    var buf = new Buffer(BUFSIZE);
-                    var bytesRead = 0;
-        
-                    var fd = process.stdin.fd;
-                    // Linux and Mac cannot use process.stdin.fd (which isn't set up as sync)
-                    var usingDevice = false;
-                    try {
-                      fd = fs.openSync('/dev/stdin', 'r');
-                      usingDevice = true;
-                    } catch (e) {}
-        
-                    bytesRead = fs.readSync(fd, buf, 0, BUFSIZE, null);
-        
-                    if (usingDevice) { fs.closeSync(fd); }
-                    if (bytesRead > 0) {
-                      result = buf.slice(0, bytesRead).toString('utf-8');
-                    } else {
-                      result = null;
-                    }
-        
-                  } else if (typeof window != 'undefined' &&
-                    typeof window.prompt == 'function') {
-                    // Browser.
-                    var str = Module.command_text;
-                    Module.command_text = null;
-    //                result = window.prompt('Input: ');  // returns null on cancel
-                    result = str;  // returns null on cancel
-                    if (result !== null) {
-                      result += '\n';
-                    }
-                  } else if (typeof readline == 'function') {
-                    // Command line.
-                    result = readline();
-                    if (result !== null) {
-                      result += '\n';
-                    }
-                  }
-                  if (!result) {
-                    return null;
-                  }
-                  tty.input = intArrayFromString(result, true);
-                }
-                return tty.input.shift();
-              }
-              Module.ccall('initSystem',null,[],[]);
-              Module.ccall('printBanner',null,[],[]);
-              Module.ccall('interpreterNoLoop',null,[],[]);
-            }],
-            print: (function() {
-              var element = document.getElementById('output');
-              if (element) element.value = ''; // clear browser cache
-              return function(text) {
-                if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
-                // These replacements are necessary if you render to raw HTML
-                //text = text.replace(/&/g, "&amp;");
-                //text = text.replace(/</g, "&lt;");
-                //text = text.replace(/>/g, "&gt;");
-                //text = text.replace('\n', '<br>', 'g');
-                console.log(text);
-                if (element) {
-                  element.value += text + "\n";
-                  element.scrollTop = element.scrollHeight; // focus on bottom
-                }
-              };
-            })(),
-            printErr: function(text) {
-              if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
-              if (0) { // XXX disabled for safety typeof dump == 'function') {
-                dump(text + '\n'); // fast, straight to the real console
-              } else {
-                console.error(text);
-              }
-            },
-            canvas: null,/*(function() {
-              var canvas = document.getElementById('canvas');
-    
-              // As a default initial behavior, pop up an alert when webgl context is lost. To make your
-              // application robust, you may want to override this behavior before shipping!
-              // See http://www.khronos.org/registry/webgl/specs/latest/1.0/#5.15.2
-              canvas.addEventListener("webglcontextlost", function(e) { alert('WebGL context lost. You will need to reload the page.'); e.preventDefault(); }, false);
-    
-              return canvas;
-            })(),*/
-            setStatus: function(text) {
-              return ;
-    /*
-              if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: '' };
-              if (text === Module.setStatus.text) return;
-              var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
-              var now = Date.now();
-              if (m && now - Date.now() < 30) return; // if this is a progress update, skip it if too soon
-              if (m) {
-                text = m[1];
-                progressElement.value = parseInt(m[2])*100;
-                progressElement.max = parseInt(m[4])*100;
-                progressElement.hidden = false;
-                spinnerElement.hidden = false;
-              } else {
-                progressElement.value = null;
-                progressElement.max = null;
-                progressElement.hidden = true;
-                if (!text) spinnerElement.style.display = 'none';
-              }
-              statusElement.innerHTML = text;*/
-            },
-            totalDependencies: 0,
-            monitorRunDependencies: function(left) {
-              this.totalDependencies = Math.max(this.totalDependencies, left);
-              Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
-            }
-          };
-          Module.setStatus('Downloading...');
-          window.onerror = function(event) {
-            // TODO: do not warn on ok events like simulating an infinite loop or exitStatus
-            Module.setStatus('Exception thrown, see JavaScript console');
-            spinnerElement.style.display = 'none';
-            Module.setStatus = function(text) {
-              if (text) Module.printErr('[post-exception status] ' + text);
-            };
-          };
-        </script>
+        <script type='text/javascript' src="module.js"></script>
         <script>
               (function() {
                 var memoryInitializer = 'hugs.html.mem';
@@ -196,6 +90,8 @@
                 xhr.open('GET', memoryInitializer, true);
                 xhr.responseType = 'arraybuffer';
                 xhr.send(null);
+
+
               })();
     
               var script = document.createElement('script');
@@ -204,5 +100,12 @@
     
     </script>
     <script src="./js/em.js"></script>
+    <footer class="bs-docs-footer" role="contentinfo"> 
+      <div class="container"> 
+	<ul class="bs-docs-footer-links"> 
+	  <li><a href="https://github.com/junjihashimoto/hugs-js">github</a></li> 
+	</ul> 
+      </div>
+    </footer>
   </body>
 </html>

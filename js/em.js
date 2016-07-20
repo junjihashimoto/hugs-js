@@ -1,5 +1,5 @@
-function SendCommand(){
-    Module.command_text=document.getElementById('line').value;
+function DoCommand(command){
+    Module.command_text=command;
     document.getElementById('line').value="";
     try{ 
         Module.ccall('printf','int',['string'],[Module.command_text+'\n']);
@@ -11,12 +11,26 @@ function SendCommand(){
     return false;
 }
 
+function SendCommand(){
+    DoCommand(document.getElementById('line').value);
+}
+function PlayCommand(){
+    DoCommand(":load main.hs");
+    DoCommand(":main");
+}
+
 (function(){
-  var btn = document.getElementById('save-btn');
-  btn.addEventListener('click',
+  document.getElementById('save-btn').addEventListener('click',
     function(ev){
         FS.writeFile('main.hs',ace_editor.getValue(),null);
 //      FS.writeeditor.getValue()
     }
   );
+  document.getElementById('play-btn').addEventListener('click',
+    function(ev){
+      FS.writeFile('main.hs',ace_editor.getValue(),null)
+      PlayCommand();
+    }
+  );
+
 })();
