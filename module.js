@@ -57,7 +57,16 @@ var Module = {
             return tty.input.shift();
         }
         var file = "Main.hs";
-        FS.writeFile(file,"main = do\n    print 123");
+        FS.writeFile(file,
+										 "import Algebra.CAS\n"+
+										 "x = V \"x\" \n" +
+										 "y = V \"y\" \n" +
+										 "main = do\n"+
+										 "  print $ x^2 + 2*x + x^2\n" +
+										 "  print $ diff (x^2 + 2*x + x^2) x\n" +
+										 "  print $ linsolve [x+y=:2,x-y=:3]\n" +
+										 "  print $ subst [(x,1)] $ diff (x^2 + 2*x + x^2) x\n"
+										);
 	ace_editor.setValue(FS.readFile(file, { encoding: 'utf8' }));
 	document.getElementById('filepath').value = "/"+file;
         Module.ccall('initSystem',null,[],[]);
