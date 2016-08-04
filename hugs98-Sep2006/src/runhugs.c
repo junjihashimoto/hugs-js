@@ -26,6 +26,8 @@
 #include <windows.h>
 #endif
 
+#include <emscripten.h>
+
 extern int  main      Args((int, char**));
 static void check     Args((void));
 static void loadHugs  Args((int, char**));
@@ -58,6 +60,7 @@ char* argv[]; {
  * main
  * ------------------------------------------------------------------------*/
 
+extern int setenv(const char *name, const char *value, int overwrite);
 int main(argc,argv)
 int    argc;
 char* argv[]; {
@@ -65,6 +68,42 @@ char* argv[]; {
     char** hugs_argv;
     int    hugs_argc;
     char*  progname;
+    EM_ASM(
+	   ENV.HUGSDIR=process.env['HUGSDIR'];
+	   ENV.HUGSFLAGS=process.env['HUGSFLAGS'];
+	   //           console.log(process.argv[1]);
+	   var fs = require('fs');
+           
+	   var dirs = process.argv[1].split('/'); //runhugs
+	   dirs.pop(); //src
+	   dirs.pop(); //hugs
+	   var WorkPath = dirs.join('/');
+	   for(var i=1;i<dirs.length;i++){
+	     //console.log(dirs[i]);
+	     try {
+	       FS.lookupPath(dirs[i]);
+	     } catch (e) {
+	       //console.log("mkdir:"+dirs[i]);
+	       FS.mkdir(dirs[i]);
+
+	     }
+	     FS.chdir(dirs[i]);
+	   }
+
+	   var dirsHugs = process.argv[1].split('/');
+	   dirsHugs.pop();
+	   dirsHugs.pop();
+	   var HugsPath = dirsHugs.join('/');
+	   //	   console.log("mount");
+	   //	   console.log(HugsPath);
+	   //	   console.log(WorkPath);
+	   FS.mount(NODEFS, { root: HugsPath }, WorkPath);
+	   //	   console.log(FS.readdir("."));
+	   //	   console.log("chdir:"+process.cwd());
+
+	   FS.chdir('/');
+	   FS.chdir(process.cwd());
+    );
 
     progname = argv ? argv[0] : "runhugs";
     if (!initSystem()) {

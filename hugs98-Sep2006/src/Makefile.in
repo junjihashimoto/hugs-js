@@ -83,7 +83,7 @@ RC_FILES	= @RC_FILES@
 # This rule goes first to make it the default choice
 default		:: all
 
-all		:: hugs$(EXEEXT) runhugs$(EXEEXT) ffihugs$(EXEEXT)
+all		:: hugs$(EXEEXT) runhugs.js ffihugs.js
 
 ################################################################
 # Hugs interpreter and standalone evaluator
@@ -100,11 +100,19 @@ version.$(OBJEXT) : version.c $(SOURCES)
 		      -c $(CFLAGS) $(OPTFLAGS) $<
 
 SERVER_OBJECTS	= server.$(OBJEXT) $(OBJECTS) 
-runhugs$(EXEEXT) : runhugs.$(OBJEXT) $(SERVER_OBJECTS)
-		  $(CC) $(LDFLAGS) runhugs.$(OBJEXT) $(SERVER_OBJECTS) $(LIBS) -o runhugs$(EXEEXT)
+runhugs.bc : runhugs.$(OBJEXT) $(SERVER_OBJECTS)
+		  $(CC) $(LDFLAGS) runhugs.$(OBJEXT) $(SERVER_OBJECTS) $(LIBS) -o runhugs.bc
 
-ffihugs$(EXEEXT) : ffihugs.$(OBJEXT) $(SERVER_OBJECTS)
-		  $(CC) $(LDFLAGS) ffihugs.$(OBJEXT) $(SERVER_OBJECTS) $(LIBS) -o ffihugs$(EXEEXT)
+runhugs.js : runhugs.bc
+		  $(CC) -O2 runhugs.bc -o runhugs.js --memory-init-file 0 -s TOTAL_MEMORY=67108864 -s MAIN_MODULE=1
+
+
+ffihugs.bc : ffihugs.$(OBJEXT) $(SERVER_OBJECTS)
+		  $(CC) $(LDFLAGS) ffihugs.$(OBJEXT) $(SERVER_OBJECTS) $(LIBS) -o ffihugs.bc
+
+ffihugs.js : ffihugs.bc
+		  $(CC) -O2 ffihugs.bc -o ffihugs.js --memory-init-file 0 -s TOTAL_MEMORY=67108864 -s MAIN_MODULE=1
+
 
 ffihugs.$(OBJEXT) : runhugs.$(OBJEXT)
 		  $(CC) -c $(CFLAGS) $(OPTFLAGS) -DFFI_COMPILER runhugs.c -o ffihugs.$(OBJEXT)

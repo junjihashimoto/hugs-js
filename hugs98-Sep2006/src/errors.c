@@ -251,7 +251,7 @@ String hugsClearOutputBuffer() {
 Void hugsPrintf(const char *fmt, ...) {
     va_list ap;                    /* pointer into argument list           */
     va_start(ap, fmt);             /* make ap point to first arg after fmt */
-    if (!disableOutput) {
+    if (1 || !disableOutput) {
 	vprintf(fmt, ap);
     } else {
 	vBufferedPrintf(&outputStream, fmt, ap);

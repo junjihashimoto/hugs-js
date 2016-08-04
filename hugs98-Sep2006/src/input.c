@@ -209,6 +209,7 @@ static FILE   *inputStream = 0;
 static Bool   thisLiterate;
 static String nextStringChar;          /* next char in string buffer       */
 
+#undef USE_READLINE
 #if     USE_READLINE                   /* for command line editors         */
 static  String currentLine;            /* editline or GNU readline         */
 static  String nextChar;

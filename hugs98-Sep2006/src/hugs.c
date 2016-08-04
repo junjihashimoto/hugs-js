@@ -27,13 +27,14 @@
 #include <ctype.h>
 
 #include <stdio.h>
+#include <emscripten.h>
 
 /* --------------------------------------------------------------------------
  * Local function prototypes:
  * ------------------------------------------------------------------------*/
 
 static Void   local interpreter       Args((Int,String []));
-static Void   local initInterpreter   Args((Void));
+extern Void   local initInterpreter   Args((Void));
 static Void   local menu              Args((Void));
 static Void   local guidance          Args((Void));
 static Void   local forHelp           Args((Void));
@@ -159,9 +160,9 @@ String argv[]; {
 /* --------------------------------------------------------------------------
  * Printing the banner
  * ------------------------------------------------------------------------*/
-static Void printBanner Args((Void));
+extern Void printBanner Args((Void));
 
-static Void printBanner()
+Void printBanner()
 {
 #if SMALL_BANNER
     Printf("Hugs98 - http://haskell.org/hugs - %s\n", versionString);
@@ -344,6 +345,7 @@ static Void local changeDir() {         /* change directory                */
 	ERRMSG(0) "Unable to change to directory \"%s\"", path
 	EEND;
     }
+    EM_ASM_INT(FS.chdir($0),expandedPath);
 }
 
 #ifdef __SYMBIAN32__
@@ -953,6 +955,32 @@ static Void local autoReloadFiles() {
  * main read-eval-print loop, with error trapping:
  * ------------------------------------------------------------------------*/
 
+/* --------------------------------------------------------------------------
+ * main read-eval-print loop, with error trapping:
+ * ------------------------------------------------------------------------*/
+
+extern Void local interpreterNoLoop()
+{
+    Int errorNumber = setjmp(catch_error);
+
+    breakOn(TRUE);                      /* enable break trapping           */
+    if ( numLoadedScripts()==0 ) {      /* only succeeds on first time,    */
+	if (errorNumber)                /* before Prelude has been loaded  */
+	    fatal("Unable to load Prelude");
+        String agv[] = {"hugs","-98"};
+	initialize(1,agv);
+	forHelp();
+    }
+
+#if defined(_MSC_VER) && !defined(_MANAGED)
+    /* Under Win32 (when compiled with MSVC), we specially
+     * catch and handle SEH stack overflows.
+     */
+    __try {
+#endif
+
+}
+
 static Void local interpreter(argc,argv)/* main interpreter loop           */
 Int    argc;
 String argv[]; {
@@ -1028,7 +1056,7 @@ String argv[]; {
 #endif
 }
 
-static Void local initInterpreter()
+Void local initInterpreter()
 {
     everybody(RESET);               /* reset to sensible initial state */
     dropScriptsFrom(numLoadedScripts()-1); 
@@ -1038,7 +1066,7 @@ static Void local initInterpreter()
     promptForInput(textToStr(module(findEvalModule()).text));
 }
 
-Bool doCommand()		    /* read and execute a command      */
+extern Bool doCommand()		    /* read and execute a command      */
 {				    /* returns TRUE on QUIT (:quit)    */
 	Command cmd;
 	cmd = readCommand(cmds, (Char)':', (Char)'!');

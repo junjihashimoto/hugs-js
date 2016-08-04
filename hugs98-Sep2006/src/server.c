@@ -26,6 +26,7 @@
 #include "server.h"
 
 #include <setjmp.h>
+#include <emscripten.h>
 
 static Void   setHugsAPI   Args((Void));
 static Bool   SetModule    Args((String));
@@ -220,7 +221,8 @@ String argv[]; {
 	  }
 	}
       }
-      EnableOutput(FALSE);
+      //      EnableOutput(FALSE);
+      EnableOutput(TRUE);
       loadPrelude();
 
 #ifndef NO_DYNAMIC_TYPES
@@ -331,6 +333,7 @@ String s;
 	    setError("changeDir: invalid directory");
 	    return;
 	}
+        EM_ASM_INT(FS.chdir($0),s);
 	);
 }
 
