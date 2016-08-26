@@ -333,7 +333,7 @@ String s;
 	    setError("changeDir: invalid directory");
 	    return;
 	}
-        EM_ASM_INT(FS.chdir($0),s);
+        EM_ASM_INT(FS.chdir(Pointer_stringify($0)),s);
 	);
 }
 

@@ -345,7 +345,7 @@ static Void local changeDir() {         /* change directory                */
 	ERRMSG(0) "Unable to change to directory \"%s\"", path
 	EEND;
     }
-    EM_ASM_INT(FS.chdir($0),expandedPath);
+    EM_ASM_INT(FS.chdir(Pointer_stringify($0)),expandedPath);
 }
 
 #ifdef __SYMBIAN32__

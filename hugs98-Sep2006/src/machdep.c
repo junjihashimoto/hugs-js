@@ -23,6 +23,7 @@
 #include "machdep.h"
 #include "char.h"
 #include "evaluator.h" /* everybody() proto only */
+#include <emscripten.h>
 
 /*#define DEBUG_SEARCH*/
 
@@ -293,7 +294,7 @@ FileName macHugsDir; /* Directory where Hugs was found. */
 # define isSLASH(c)              ((c)==SLASH)
 # define PATHSEP                 ':'
 # define isPATHSEP(x)            (*(x) == PATHSEP)
-# define DLL_ENDING              ".so"
+# define DLL_ENDING              ".js"
 #endif
 
 #if HAVE_GETMODULEFILENAME && !DOS && !cygwin32_HOST_OS
@@ -1567,6 +1568,8 @@ static Void local installHandlers() { /* Install handlers for all fatal    */
  * Shell escapes:
  * ------------------------------------------------------------------------*/
 
+extern int shellNode(char* cmd);
+
 Int
 shellEsc(cmd, sync, useShell)         /* run a shell command (or shell)  */
 String cmd;
@@ -1583,7 +1586,8 @@ Bool   useShell; {
 	cmd = fromEnv("SHELL","/bin/sh");
     }
 # endif
-    return system(cmd);
+    int r = shellNode(cmd);
+    return r;//system(cmd);
 # endif
 #else
   STARTUPINFO si;
@@ -1932,18 +1936,19 @@ static void* local getDLL(dll)  /* load dll */
 String dll; {
     void *instance = dlopen(dll,
 			    0
-#if defined(RTLD_LAZY) /* eg SunOS4 doesn't have RTLD_NOW */
+			    /*
+#if defined(RTLD_LAZY)
 			    | RTLD_LAZY 
 # if defined(RTLD_GLOBAL)
 			    | RTLD_GLOBAL
 # endif
 #elif defined(RTLD_NOW)
 			    | RTLD_NOW
-#else /* eg FreeBSD doesn't have RTLD_LAZY */
+#else
 			    | 1
 #endif
+			    */
 			    );
-
     if (NULL == instance) {
 	ERRMSG(0) "Error while importing DLL \"%s\":\n%s\n", dll, dlerror()
 	EEND;
@@ -1969,7 +1974,7 @@ void freeDLL (dll) /* free up DLL */
 void* dll; {
   if (dll) {
     /* No error checking done. */
-    dlclose(dll);
+    //dlclose(dll); // emscripten's dlclose is something wrong.
   }
   return;
 }
@@ -2376,6 +2381,9 @@ String flags; {
     insert(" \"");
     insert(mkFFIFilename(i));
     insert("\"");
+
+    insert(" -s SIDE_MODULE=1");
+    insert(" -O2");
 
     /* compiler and linker flags specified on Hugs command line */
     if (flags) {
