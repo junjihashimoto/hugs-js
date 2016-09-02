@@ -1,0 +1,4 @@
+#!/bin/bash
+DIRNAME=`dirname $0`
+exec node --stack_size=64000 $DIRNAME/runhugs.js $@
+

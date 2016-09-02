@@ -1056,7 +1056,7 @@ String argv[]; {
 #endif
 }
 
-Void local initInterpreter()
+npnVoid local initInterpreter()
 {
     everybody(RESET);               /* reset to sensible initial state */
     dropScriptsFrom(numLoadedScripts()-1); 
