@@ -10,6 +10,7 @@ UseGhcForCc = YES
 ifneq "$(TARGETPLATFORM)" "i386-unknown-mingw32"
 EXCLUDED_SRCS += consUtils.c
 endif
+EXCLUDED_SRCS += HsBase.c
 
 SRC_CC_OPTS += -Wall -DCOMPILING_STDLIB 
 SRC_CC_OPTS += -I$(GHC_INCLUDE_DIR) -I$(GHC_RTS_DIR) -I../include
