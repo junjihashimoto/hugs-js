@@ -45,7 +45,7 @@ getDataFileName s = do here <- getCurrentDirectory
 #ifdef __GLASGOW_HASKELL__
 default_compiler = "ghc"
 #else
-default_compiler = "gcc"
+default_compiler = "emcc"
 #endif
 
 #if defined(__GLASGOW_HASKELL__) && (__GLASGOW_HASKELL__ < 604)
@@ -560,10 +560,11 @@ output flags name toks = do
 
     compiler <- case [c | Compiler c <- flags] of
         []  -> do
-	    mb_path <- findExecutable default_compiler
+            return "emcc"
+{-	    mb_path <- findExecutable default_compiler
 	    case mb_path of
 		Nothing -> die ("Can't find "++default_compiler++"\n")
-		Just path -> return path
+		Just path -> return path-}
         [c] -> return c
         _   -> onlyOne "compiler"
 
@@ -597,12 +598,12 @@ output flags name toks = do
     rawSystemL ("linking " ++ oProgName) beVerbose linker
         (  [f | LinkFlag f <- flags]
         ++ [oProgName]
-        ++ ["-o", progName]
+        ++ ["-o", progName++".js"]
 	)
     removeFile oProgName
 
     rawSystemWithStdOutL ("running " ++ execProgName) beVerbose execProgName [] outName
-    removeFile progName
+    removeFile $ progName ++ ".js"
 
     when needsH $ writeFile outHName $
         "#ifndef "++includeGuard++"\n" ++
@@ -640,10 +641,10 @@ rawSystemL action flg prog args = do
 
 rawSystemWithStdOutL :: String -> Bool -> FilePath -> [String] -> FilePath -> IO ()
 rawSystemWithStdOutL action flg prog args outFile = do
-  let cmdLine = prog++" "++unwords args++" >"++outFile
+  let cmdLine = prog++".js"++" "++unwords args++" >"++outFile
   when flg (hPutStrLn stderr ("Executing: " ++ cmdLine))
 #ifndef HAVE_runProcess
-  exitStatus <- system cmdLine
+  exitStatus <- system $ "node " ++ cmdLine
 #else
   hOut <- openFile outFile WriteMode
   process <- runProcess prog args Nothing Nothing Nothing (Just hOut) Nothing
