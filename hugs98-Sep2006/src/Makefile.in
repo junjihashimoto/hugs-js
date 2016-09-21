@@ -118,9 +118,6 @@ ffihugs.js : ffihugs.bc library_hugs.js
 		  $(CC) -O2 ffihugs.bc -o ffihugs.js --memory-init-file 0 -s TOTAL_MEMORY=268435456 -s MAIN_MODULE=1 --js-library library_hugs.js
 
 
-ffihugs.$(OBJEXT) : runhugs.$(OBJEXT)
-		  $(CC) -c $(CFLAGS) $(OPTFLAGS) -DFFI_COMPILER runhugs.c -o ffihugs.$(OBJEXT)
-
 ################################################################
 # Clean, distclean, veryclean, TAGS
 ################################################################
