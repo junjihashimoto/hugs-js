@@ -27,26 +27,26 @@ var LibraryHugs = {
 	    if(process.env['HUGSFLAGS'])
 		ENV.HUGSFLAGS=process.env['HUGSFLAGS'];
 	    var fs = require('fs');
-            
-	    var dirs = process.argv[1].split('/'); //runhugs
-	    dirs.pop(); //src
-	    dirs.pop(); //hugs
-	    var WorkPath = dirs.join('/');
-	    for(var i=1;i<dirs.length;i++){
-		try {
-		    FS.lookupPath(dirs[i]);
-		} catch (e) {
-		    FS.mkdir(dirs[i]);
-
+	    var dirs;
+	    dirs = fs.readdirSync('/');
+	    for(var i in dirs){
+		var path = '/'+dirs[i];
+		if(path!='/home' &&
+		   path!='/dev' &&
+		   path!='/proc' &&
+		   path!='/tmp'){
+		    FS.mkdir(path);
+		    FS.mount(NODEFS, { root: path }, path);
 		}
-		FS.chdir(dirs[i]);
 	    }
-
-	    var dirsHugs = process.argv[1].split('/');
-	    dirsHugs.pop();
-	    dirsHugs.pop();
-	    var HugsPath = dirsHugs.join('/');
-	    FS.mount(NODEFS, { root: HugsPath }, WorkPath);
+	    dirs = fs.readdirSync('/home');
+	    for(var i in dirs){
+		var path = '/home/'+dirs[i];
+		if(path!='/home/web_user'){
+		    FS.mkdir(path);
+		    FS.mount(NODEFS, { root: path }, path);
+		}
+	    }
 	    FS.chdir(process.cwd());
 	}
     },
