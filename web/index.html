@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"">
+    <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hugs compiled by Emscripten</title>
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <script src="./js/jquery-1.11.2.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/ace.js"></script>
+    <link rel="stylesheet" href="./css/style.min.css" > 
+    <script src="./js/jstree.min.js"></script>
+    <link href="./css/docs.min.css" rel="stylesheet">
+    <link href="./css/em.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="bs-docs-header" id="content" tabindex="-1"> 
+      <div class="container"> 
+	<p>Hugs with ACE Editor</p> 
+	<p>Write haskell code. Then type ":load main.hs"</p> 
+      </div>
+    </div>
+    <div class="container"  style="border: 1px solid;">
+      <div class="row">
+        <div class="col-md-2">
+        <div class="btn-group">
+          <button type="button" class="btn" id="save-btn">
+            <span class="glyphicon glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn" id="play-btn">
+            <span class="glyphicon glyphicon glyphicon glyphicon-play" aria-hidden="true"></span>
+          </button>
+        </div>
+        </div>
+        <div class="col-md-10" ><input type="text" class="form-control" placeholder="Text input" id="filepath"></div>
+      </div>
+      <div class="row" style="border: 1px solid;">
+        <div class="col-md-4">
+          <div id="jstree">
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div id="editor" style="height: 600px"></div>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ext-language_tools.js"></script>
+          <script>
+            ace_editor = ace.edit("editor");
+            ace_editor.$blockScrolling = Infinity;
+            ace_editor.setOptions({
+              enableBasicAutocompletion: true,
+              enableSnippets: true,
+              enableLiveAutocompletion: true,
+              maxLines: Infinity,
+              minLines: 5
+            });
+            ace_editor.setTheme("ace/theme/monokai");
+            ace_editor.getSession().setMode("ace/mode/javascript");
+            ace_editor.getSession().setMode("ace/mode/haskell");
+          </script>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <textarea id="output" rows="8"></textarea>
+        </div>
+        <div class="col-md-12">
+        <form onSubmit="SendCommand();return false;">
+          Hugs &gt <input type="text" id="line" style="width:90%">
+        </form>
+        </div>
+      </div>
+    </div>
+        <script type='text/javascript' src="module.js"></script>
+        <script>
+              (function() {
+                var memoryInitializer = 'hugs.html.mem';
+                if (typeof Module['locateFile'] === 'function') {
+                  memoryInitializer = Module['locateFile'](memoryInitializer);
+                } else if (Module['memoryInitializerPrefixURL']) {
+                  memoryInitializer = Module['memoryInitializerPrefixURL'] + memoryInitializer;
+                }
+                var xhr = Module['memoryInitializerRequest'] = new XMLHttpRequest();
+                xhr.open('GET', memoryInitializer, true);
+                xhr.responseType = 'arraybuffer';
+                xhr.send(null);
+
+
+              })();
+    
+              var script = document.createElement('script');
+              script.src = "./js/hugs.js";
+              document.body.appendChild(script);
+    
+    </script>
+    <script src="./js/em.js"></script>
+    <footer class="bs-docs-footer" role="contentinfo"> 
+      <div class="container"> 
+	<ul class="bs-docs-footer-links"> 
+	  <li><a href="https://github.com/junjihashimoto/hugs-js">github</a></li> 
+	</ul> 
+      </div>
+    </footer>
+  </body>
+</html>

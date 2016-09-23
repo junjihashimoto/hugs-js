@@ -6,7 +6,8 @@ NODE=node
 SRCDIR=hugs98-Sep2006
 
 FLAGS=\
- -s TOTAL_MEMORY=67108864 --preload-file $(SRCDIR)/hugs-dir/usr/local@/usr/local \
+ -s TOTAL_MEMORY=67108864 \
+ --preload-file $(SRCDIR)/hugs-dir/usr/local/lib@/usr/local/lib \
  -s EXPORTED_FUNCTIONS="['_initSystem','_printBanner','_main']" \
  -s MAIN_MODULE=1 --js-library $(SRCDIR)/src/library_hugs.js
 
@@ -17,6 +18,6 @@ hugs98-Sep2006/src/hugs.js:
 	cd $(SRCDIR);$(EMMAKE) make install DESTDIR=$(PWD)/$(SRCDIR)/hugs-dir
 	cd $(SRCDIR);$(EMMAKE) make install DESTDIR=$(PWD)/$(SRCDIR)/hugs-dir
 
-hugs.html:hugs98-Sep2006/src/hugs.js
-	$(EMCC) -O2 $(PWD)/$(SRCDIR)/src/hugs.bc -o hugs.html $(FLAGS)
+web/hugs.html:$(SRCDIR)/src/hugs.js
+	$(EMCC) $(PWD)/$(SRCDIR)/src/hugs.bc -o web/hugs.html $(FLAGS)
 
