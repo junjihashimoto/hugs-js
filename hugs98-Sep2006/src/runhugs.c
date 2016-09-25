@@ -60,7 +60,6 @@ char* argv[]; {
  * main
  * ------------------------------------------------------------------------*/
 extern void setupNodeEnv();
-extern int setenv(const char *name, const char *value, int overwrite);
 int main(argc,argv)
 int    argc;
 char* argv[]; {

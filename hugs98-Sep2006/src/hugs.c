@@ -203,11 +203,14 @@ Void printBanner()
  * Hugs entry point:
  * ------------------------------------------------------------------------*/
 
+extern void setupNodeEnv();
+
 int main Args((Int, String []));       /* now every func has a prototype  */
 
 int main(argc,argv)
 int  argc;
 char *argv[]; {
+    setupNodeEnv();
 
     CStackBase = &argc;                 /* Save stack base for use in gc   */
 
