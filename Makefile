@@ -5,9 +5,9 @@ NODE=node
 
 SRCDIR=hugs98-Sep2006
 
-FLAGS=\
+FLAGS= -O2 \
  -s TOTAL_MEMORY=67108864 \
- --preload-file $(SRCDIR)/hugs-dir/usr/local/lib@/usr/local/lib \
+ --preload-file $(SRCDIR)/hugs-dir/usr/local/lib/hugs/packages@/usr/local/lib/hugs/packages \
  -s EXPORTED_FUNCTIONS="['_initSystem','_printBanner','_main']" \
  -s MAIN_MODULE=1 --js-library $(SRCDIR)/src/library_hugs.js
 

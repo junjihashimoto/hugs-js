@@ -19,7 +19,7 @@ var LibraryHugs = {
 	
     },
     setupNodeEnv: function() {
-	ENV['LD_LIBRARY_PATH']='';
+	ENV['LD_LIBRARY_PATH']='./';
 	
 	if(ENVIRONMENT_IS_NODE){
 	    if(process.env['HUGSDIR'])

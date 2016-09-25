@@ -40,6 +40,7 @@ exposed-modules:
 	Hugs.Time,
 	Hugs.Trex,
 	Hugs.Weak,
-	Hugs.Word
+	Hugs.Word,
+	Hugs.Emscripten
 c-sources: Hugs/Storable_aux.c
 include-dirs: Hugs
