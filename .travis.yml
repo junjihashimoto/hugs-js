@@ -10,7 +10,4 @@ before_install:
   -  git clone --depth 1 https://github.com/urho3d/emscripten-sdk.git && emscripten-sdk/emsdk activate --build=Release sdk-master-64bit && source emscripten-sdk/emsdk_env.sh
   
 script:
-  - emmake make configure
-  - emconfigure ./configure
-  - emmake make
-  - emmake make check
+  - make
