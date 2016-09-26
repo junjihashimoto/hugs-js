@@ -1,6 +1,27 @@
-# hugs-online
-hugs by emscripten
+hugs-js
+========
 
-original job is 'https://github.com/jgalenson/research.js/tree/master/hugs'.
-I replace window.prompt to html-text-box.
+[![Build Status](https://travis-ci.org/junjihashimoto/hugs-js.svg?branch=master)](https://travis-ci.org/junjihashimoto/hugs-js)
+
+This project is porting hugs98 to emscripten.
+
+All commands(hugs, runhugs and ffihugs) can execute on node-js.
+
+
+# Install
+
+Install emscripten and setup it.
+
+```
+git clone https://github.com/juj/emsdk.git
+cud emsdk && ./emsdk install sdk-incoming-64bit
+cd emsdk && ./emsdk activate sdk-incoming-64bit
+source ./emsdk/emsdk_env.sh
+```
+
+Build hugs-js
+
+```
+make
+```
 
