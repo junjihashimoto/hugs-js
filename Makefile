@@ -11,11 +11,12 @@ FLAGS= -O2 \
  -s EXPORTED_FUNCTIONS="['_initSystem','_printBanner','_main']" \
  -s MAIN_MODULE=1 --js-library $(SRCDIR)/src/library_hugs.js
 
+all: web/hugs.html
+
 hugs98-Sep2006/src/hugs.js:
-	cd $(SRCDIR);$(EMCONFIGURE) ./configure --prefix=/usr
+	cd $(SRCDIR);$(EMCONFIGURE) ./configure --prefix=/usr/local
 	cd $(SRCDIR);$(EMMAKE) make
 	cd $(SRCDIR);mkdir hugs-dir
-	cd $(SRCDIR);$(EMMAKE) make install DESTDIR=$(PWD)/$(SRCDIR)/hugs-dir
 	cd $(SRCDIR);$(EMMAKE) make install DESTDIR=$(PWD)/$(SRCDIR)/hugs-dir
 
 web/hugs.html:$(SRCDIR)/src/hugs.js

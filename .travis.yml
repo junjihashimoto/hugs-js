@@ -1,0 +1,16 @@
+language: c
+sudo: required
+dist: trusty
+before_install:
+  
+  -  sudo apt-get purge cmake
+  -  wget --no-check-certificate -qO- http://www.cmake.org/files/v3.4/cmake-3.4.3-Linux-x86_64.tar.gz -O /tmp/cmake-3.4.3-Linux-x86_64.tar.gz
+  -  tar -xf /tmp/cmake-3.4.3-Linux-x86_64.tar.gz
+  -  export PATH=$PWD/cmake-3.4.3-Linux-x86_64/bin/:$PATH
+  -  git clone --depth 1 https://github.com/urho3d/emscripten-sdk.git && emscripten-sdk/emsdk activate --build=Release sdk-master-64bit && source emscripten-sdk/emsdk_env.sh
+  
+script:
+  - emmake make configure
+  - emconfigure ./configure
+  - emmake make
+  - emmake make check
