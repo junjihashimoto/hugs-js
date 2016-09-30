@@ -59,6 +59,7 @@ typedef int            HsBool;
 typedef void*          HsAddr;       
 typedef void*          HsPtr;          
 typedef void           (*HsFunPtr)(void);
+typedef void           (*HsFunPtr2)(int);
 typedef void*          HsForeignPtr;   
 typedef void*          HsStablePtr;  
                        
@@ -196,7 +197,7 @@ typedef struct {
   HugsStablePtr  (*lookupName)     (char*, char*);
   void           (*ap)             (int);
   void           (*getUnit)        (void);
-  void*          (*mkThunk)        (HsFunPtr, HugsStablePtr);
+  HsFunPtr       (*mkThunk)        (HsFunPtr2, HugsStablePtr);
   void           (*freeThunk)      (void*);
 
   HugsStablePtr  (*makeStablePtr4) (void);

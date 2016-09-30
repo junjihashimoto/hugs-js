@@ -1,4 +1,10 @@
 var LibraryHugs = {
+    mkFunc: function(app,s){
+	var func = function (){
+	    Runtime.getFuncWrapper(app, 'vi')(s);
+	};
+	return Runtime.addFunction(func);
+    },
     shellNode: function(cmd) {
 	if(ENVIRONMENT_IS_NODE){
 	    var r = 0;

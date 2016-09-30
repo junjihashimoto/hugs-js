@@ -153,6 +153,9 @@ esac
 $ffihugs Hugs.Storable \
 	libraries/hugsbase/Hugs/Storable_aux.c
 
+$ffihugs Hugs.Emscripten \
+	libraries/hugsbase/Hugs/hugs_emscripten.c
+
 $ffihugs '-i"HsBase.h"' Foreign.C.Error $base_includes \
 	$source/base/cbits/PrelIOUtils.c $base_libs
 $ffihugs '-i"HsBase.h"' Foreign.Marshal.Alloc $base_includes \
