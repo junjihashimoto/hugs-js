@@ -1,0 +1,60 @@
+.board0 {
+  border: solid 3px;
+  background: #000000;
+  height: 330px;
+  width:  330px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.board10 {
+  margin-top: 5px;
+  margin-bottom: 0px;
+  margin-left: 7px;
+  margin-right: 0px;
+  display: inline-block;
+}
+
+.board1 {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 7px;
+  margin-right: 0px;
+  display: inline-block;
+}
+
+.square {
+  width: 35.30px;
+  height: 35.30px;
+  background: #00ff00;
+  display: inline-block;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.white-disk {
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  background: #ffffff;
+  display: inline-block;
+  position: absolute;
+  margin-top: 3px;
+  margin-bottom: 0px;
+  margin-left: 3px;
+  margin-right: 0px;
+}
+
+.black-disk {
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  background: #000000;
+  display: inline-block;
+  position: absolute;
+  margin-top: 3px;
+  margin-bottom: 0px;
+  margin-left: 3px;
+  margin-right: 0px;
+}

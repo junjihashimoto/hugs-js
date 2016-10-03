@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Emscripten-Generated Code</title>
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <link href="./css/docs.min.css" rel="stylesheet">
+    <link href="./css/board.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <div class="bs-docs-header" id="content" tabindex="-1"> 
+      <div class="container"> 
+	<h1>Reversi</h1> 
+      </div>
+    </div>
+    <div class="container">
+      <h2 id="message" class="text-center"></h2> 
+      <h2 id="status" class="text-center"></h2> 
+      <h2 id="progress" class="text-center"></h2> 
+      <h2 id="spinner" class="text-center"></h2> 
+      <div class="board0">
+        <div class="board10">
+           <span id="s00" class="square"><span id="00"></span></span>
+           <span id="s01" class="square"><span id="01"></span></span>
+           <span id="s02" class="square"><span id="02"></span></span>
+           <span id="s03" class="square"><span id="03"></span></span>
+           <span id="s04" class="square"><span id="04"></span></span>
+           <span id="s05" class="square"><span id="05"></span></span>
+           <span id="s06" class="square"><span id="06"></span></span>
+           <span id="s07" class="square"><span id="07"></span></span>
+        </div>
+        <div class="board1">
+           <span id="s10" class="square"><span id="10"></span></span>
+           <span id="s11" class="square"><span id="11"></span></span>
+           <span id="s12" class="square"><span id="12"></span></span>
+           <span id="s13" class="square"><span id="13"></span></span>
+           <span id="s14" class="square"><span id="14"></span></span>
+           <span id="s15" class="square"><span id="15"></span></span>
+           <span id="s16" class="square"><span id="16"></span></span>
+           <span id="s17" class="square"><span id="17"></span></span>
+        </div>
+        <div class="board1">
+           <span id="s20" class="square"><span id="20"></span></span>
+           <span id="s21" class="square"><span id="21"></span></span>
+           <span id="s22" class="square"><span id="22"></span></span>
+           <span id="s23" class="square"><span id="23"></span></span>
+           <span id="s24" class="square"><span id="24"></span></span>
+           <span id="s25" class="square"><span id="25"></span></span>
+           <span id="s26" class="square"><span id="26"></span></span>
+           <span id="s27" class="square"><span id="27"></span></span>
+        </div>
+        <div class="board1">
+           <span id="s30" class="square"><span id="30"></span></span>
+           <span id="s31" class="square"><span id="31"></span></span>
+           <span id="s32" class="square"><span id="32"></span></span>
+           <span id="s33" class="square"><span id="33"></span></span>
+           <span id="s34" class="square"><span id="34"></span></span>
+           <span id="s35" class="square"><span id="35"></span></span>
+           <span id="s36" class="square"><span id="36"></span></span>
+           <span id="s37" class="square"><span id="37"></span></span>
+        </div>
+        <div class="board1">
+           <span id="s40" class="square"><span id="40"></span></span>
+           <span id="s41" class="square"><span id="41"></span></span>
+           <span id="s42" class="square"><span id="42"></span></span>
+           <span id="s43" class="square"><span id="43"></span></span>
+           <span id="s44" class="square"><span id="44"></span></span>
+           <span id="s45" class="square"><span id="45"></span></span>
+           <span id="s46" class="square"><span id="46"></span></span>
+           <span id="s47" class="square"><span id="47"></span></span>
+        </div>
+        <div class="board1">
+           <span id="s50" class="square"><span id="50"></span></span>
+           <span id="s51" class="square"><span id="51"></span></span>
+           <span id="s52" class="square"><span id="52"></span></span>
+           <span id="s53" class="square"><span id="53"></span></span>
+           <span id="s54" class="square"><span id="54"></span></span>
+           <span id="s55" class="square"><span id="55"></span></span>
+           <span id="s56" class="square"><span id="56"></span></span>
+           <span id="s57" class="square"><span id="57"></span></span>
+        </div>
+        <div class="board1">
+           <span id="s60" class="square"><span id="60"></span></span>
+           <span id="s61" class="square"><span id="61"></span></span>
+           <span id="s62" class="square"><span id="62"></span></span>
+           <span id="s63" class="square"><span id="63"></span></span>
+           <span id="s64" class="square"><span id="64"></span></span>
+           <span id="s65" class="square"><span id="65"></span></span>
+           <span id="s66" class="square"><span id="66"></span></span>
+           <span id="s67" class="square"><span id="67"></span></span>
+        </div>
+        <div class="board1">
+           <span id="s70" class="square"><span id="70"></span></span>
+           <span id="s71" class="square"><span id="71"></span></span>
+           <span id="s72" class="square"><span id="72"></span></span>
+           <span id="s73" class="square"><span id="73"></span></span>
+           <span id="s74" class="square"><span id="74"></span></span>
+           <span id="s75" class="square"><span id="75"></span></span>
+           <span id="s76" class="square"><span id="76"></span></span>
+           <span id="s77" class="square"><span id="77"></span></span>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <h2>Options</h2>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" value="" id="cpu">
+          Enable CPU-player
+        </label>
+      </div>
+    </div>
+    <script type='text/javascript'>
+      var statusElement = document.getElementById('status');
+      var progressElement = document.getElementById('progress');
+      var spinnerElement = document.getElementById('spinner');
+
+      var Module = {
+        arguments: ["/reversi-hugs.hs"],
+        preRun: [function (){
+/*           FS.createPreloadedFile('/', "JsWrapper.js", "http://localhost:8000/JsWrapper.js", true, false);
+           FS.createPreloadedFile('/', "JsWrapper.hs", "http://localhost:8000/JsWrapper.hs", true, false);
+           FS.createPreloadedFile('/', "reversi-hugs.hs", "http://localhost:8000/reversi-hugs.hs", true, false);*/
+        }],
+        postRun: [],
+        setStatus: function(text) {
+          if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: '' };
+          if (text === Module.setStatus.text) return;
+          var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+          var now = Date.now();
+          if (m && now - Date.now() < 30) return; // if this is a progress update, skip it if too soon
+          if (m) {
+            text = m[1];
+            progressElement.value = parseInt(m[2])*100;
+            progressElement.max = parseInt(m[4])*100;
+            progressElement.hidden = false;
+            spinnerElement.hidden = false;
+          } else {
+            progressElement.value = null;
+            progressElement.max = null;
+            progressElement.hidden = true;
+            if (!text) spinnerElement.style.display = 'none';
+          }
+          statusElement.innerHTML = text;
+        },
+        totalDependencies: 0,
+        monitorRunDependencies: function(left) {
+          this.totalDependencies = Math.max(this.totalDependencies, left);
+          Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
+        }
+      };
+      Module.setStatus('Downloading...');
+      window.onerror = function(event) {
+        // TODO: do not warn on ok events like simulating an infinite loop or exitStatus
+        Module.setStatus('Exception thrown, see JavaScript console');
+        spinnerElement.style.display = 'none';
+        Module.setStatus = function(text) {
+          if (text) Module.printErr('[post-exception status] ' + text);
+        };
+      };
+    </script>
+    <script>
+
+          (function() {
+            var memoryInitializer = 'runhugs.html.mem';
+            if (typeof Module['locateFile'] === 'function') {
+              memoryInitializer = Module['locateFile'](memoryInitializer);
+            } else if (Module['memoryInitializerPrefixURL']) {
+              memoryInitializer = Module['memoryInitializerPrefixURL'] + memoryInitializer;
+            }
+            var xhr = Module['memoryInitializerRequest'] = new XMLHttpRequest();
+            xhr.open('GET', memoryInitializer, true);
+            xhr.responseType = 'arraybuffer';
+            xhr.send(null);
+          })();
+
+          var script = document.createElement('script');
+          script.src = "runhugs.js";
+          document.body.appendChild(script);
+
+</script>
+  </body>
+</html>
