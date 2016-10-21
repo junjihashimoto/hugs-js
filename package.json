@@ -1,0 +1,38 @@
+{
+  "name": "emhugs",
+  "version": "1.0.0",
+  "description": "haskell interpreter(hugs) using emscripten",
+  "main": "index.js",
+  "scripts": {
+    "test": "runhugs test.hs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/junjihashimoto/hugs-js.git"
+  },
+  "keywords": [
+    "haskell",
+    "hugs",
+    "emscripten"
+  ],
+  "author": "Junji Hashimoto",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/junjihashimoto/hugs-js/issues"
+  },
+  "homepage": "https://github.com/junjihashimoto/hugs-js",
+  "files": [
+      "index.js",
+      "js/hugs.js",
+      "hugs98-Sep2006/hugs-dir",
+      "hugs98-Sep2006/src/ffihugs.js",
+      "hugs98-Sep2006/src/runhugs.js",
+      "hugs98-Sep2006/src/hugs.js",
+      "bin"
+  ],
+  "bin" : {
+      "ffihugs" : "./bin/ffihugs",
+      "runhugs" : "./bin/runhugs",
+      "hugs"    : "./bin/hugs"
+  }
+}

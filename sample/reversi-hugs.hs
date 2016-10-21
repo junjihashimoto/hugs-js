@@ -180,17 +180,19 @@ cpuEvent board_ref = do
   set board_ref (b,ndisk disk)
   showBoard b (ndisk disk)
 
+
+main' = do
+--  print "newRef"
+  board_ref <- newRef (initboard,Black)
+--  print "add event callback"
+  addClickEventAll board_ref getClickEvent
+--  print "show board"
+  showBoard initboard Black
+
+
     
 main= do
-  print "wait ready"
-  waitReady $ do
-    print "newRef"
-    board_ref <- newRef (initboard,Black)
-    print "add event callback"
-    addClickEventAll board_ref getClickEvent
-    print "show board"
-    showBoard initboard Black
-    print "main loop"
-    emSetMainLoop $ return ()
-    print "main loop done"
-  print "all done"
+--  print "wait ready"
+  waitReady main'
+--  print "main loop"
+  emSetMainLoop $ return ()

@@ -1,7 +1,8 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
 module JsWrapper where
 import Foreign.C.String
-import Hugs.Prelude
+import Foreign.Ptr
+--import Hugs.Prelude
 
 {-# CFILES jswrapper.c #-}
 
@@ -27,13 +28,17 @@ foreign import ccall "jswrapper.h" set_class_name :: CString -> CString -> IO ()
 foreign import ccall "jswrapper.h" ready :: (FunPtr (IO ())) -> IO ()
 foreign import ccall "jswrapper.h" set_message :: CString -> IO ()
 foreign import ccall "jswrapper.h" get_cpu_flag :: IO Int
+foreign import ccall "jswrapper.h" is_node_js :: IO Int
 
 
 addClickCallback :: String -> IO () -> IO ()
 addClickCallback idName callback = do
   callbackC <- wrap_callback callback
-  withCString idName $ \idNameC ->
-    withCString "click" $ \eventNameC ->
+--  print "callbackC"
+  withCString idName $ \idNameC -> do
+--    print "withcstring"
+    withCString "click" $ \eventNameC -> do
+--      print "withcstring"
       add_event_callback idNameC eventNameC callbackC
 
 
@@ -56,4 +61,9 @@ setMessage message = do
 getCpuFlag :: IO Bool
 getCpuFlag = do
   val <- get_cpu_flag
+  return (val == 1)
+
+isNodeJs :: IO Bool
+isNodeJs = do
+  val <- is_node_js
   return (val == 1)

@@ -243,6 +243,8 @@ static int lineLength = 0;
 static int inCodeBlock = FALSE; /* Inside \begin{code}..\end{code} */
 static int linePtr = 0;
 
+Bool enablePrintPrompt = 1;
+
 Void consoleInput(prompt)              /* prepare to input characters from */
 String prompt; {                       /* standard in (i.e. console/kbd)   */
     reading     = KEYBOARD;            /* keyboard input is Line oriented, */
@@ -257,7 +259,9 @@ String prompt; {                       /* standard in (i.e. console/kbd)   */
 #if HAVE_ISATTY && USE_READLINE
     if (!isatty(fileno(stdin))) { /* not reading from a tty: */
 	reading = NOKEYBOARD;     /* don't try readline      */
-	Printf("%s",prompt);FlushStdout();
+	if(enablePrintPrompt)
+	  Printf("%s",prompt);
+	FlushStdout();
 	return;
     }
 #endif
@@ -283,7 +287,9 @@ String prompt; {                       /* standard in (i.e. console/kbd)   */
     {
     INT svColor = SetForeColor(GREEN);
 #endif
-    Printf("%s",prompt);
+    if(enablePrintPrompt){
+      Printf("%s",prompt);
+    }
     FlushStdout();
 #if HUGS_FOR_WINDOWS
     SetForeColor(svColor);

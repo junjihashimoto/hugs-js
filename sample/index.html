@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Emscripten-Generated Code</title>
-    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
-    <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <script src="./js/jquery-1.11.2.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
     <link href="./css/docs.min.css" rel="stylesheet">
     <link href="./css/board.css" rel="stylesheet">
   </head>
@@ -122,9 +122,12 @@
       var Module = {
         arguments: ["/reversi-hugs.hs"],
         preRun: [function (){
-/*           FS.createPreloadedFile('/', "JsWrapper.js", "http://localhost:8000/JsWrapper.js", true, false);
+           FS.createPreloadedFile('/', "JsWrapper.js", "http://localhost:8000/JsWrapper.js", true, false);
            FS.createPreloadedFile('/', "JsWrapper.hs", "http://localhost:8000/JsWrapper.hs", true, false);
-           FS.createPreloadedFile('/', "reversi-hugs.hs", "http://localhost:8000/reversi-hugs.hs", true, false);*/
+           FS.createPreloadedFile('/', "reversi-hugs.hs", "http://localhost:8000/reversi-hugs.hs", true, false);
+//           FS.unlink('/usr/local/lib/hugs/packages/base/Foreign/Marshal/Alloc.hs');
+//           FS.createPreloadedFile('/usr/local/lib/hugs/packages/base/Foreign/Marshal/', "Alloc.hs", "http://localhost:8000/Alloc.hs", true, false);
+      
         }],
         postRun: [],
         setStatus: function(text) {

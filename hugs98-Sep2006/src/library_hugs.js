@@ -3,7 +3,8 @@ var LibraryHugs = {
 	var func = function (){
 	    Runtime.getFuncWrapper(app, 'vi')(s);
 	};
-	return Runtime.addFunction(func);
+	var fp = Runtime.addFunction(func);
+	return fp;
     },
     shellNode: function(cmd) {
 	if(ENVIRONMENT_IS_NODE){

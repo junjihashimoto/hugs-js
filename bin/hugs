@@ -1,0 +1,10 @@
+#!/bin/bash
+if [ -h $0 ] ; then
+    BIN=`dirname $0`/`readlink $0`
+else
+    BIN=$0
+fi
+DIRNAME=`dirname $BIN`
+. $DIRNAME/env.sh
+exec node --stack_size=128000 $DIRNAME/../hugs98-Sep2006/src/hugs.js $@
+

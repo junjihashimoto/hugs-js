@@ -772,7 +772,7 @@ Type resultTy; {
     fprintf(out,
             "{\n"
             "    HugsStablePtr arg1 = hugs->makeStablePtr4();\n"
-            "    void* thunk = hugs->mkThunk((HsFunPtr)%s,arg1);\n",
+            "    void* thunk = hugs->mkThunk((HsFunPtr2)%s,arg1);\n",
             textToStr(e)
             );
     fprintf(out,

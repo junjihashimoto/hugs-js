@@ -129,10 +129,12 @@ String argv[]; {
     processOptionVector(argc,argv);
 
 #if !HASKELL_98_ONLY
-    if (haskell98) {
+    if(enablePrintPrompt){
+      if (haskell98) {
 	Printf("Haskell 98 mode: Restart with command line option -98 to enable extensions\n\n");
-    } else {
+      } else {
 	Printf("Hugs mode: Restart with command line option +98 for Haskell 98 mode\n\n");
+      }
     }
 #endif
 
@@ -975,12 +977,21 @@ extern Void local interpreterNoLoop()
 	forHelp();
     }
 
-#if defined(_MSC_VER) && !defined(_MANAGED)
-    /* Under Win32 (when compiled with MSVC), we specially
-     * catch and handle SEH stack overflows.
-     */
-    __try {
-#endif
+}
+
+extern Void local interpreterNoLoopNoPrompt()
+{
+    Int errorNumber = setjmp(catch_error);
+
+    breakOn(TRUE);                      /* enable break trapping           */
+    if ( numLoadedScripts()==0 ) {      /* only succeeds on first time,    */
+	if (errorNumber)                /* before Prelude has been loaded  */
+	    fatal("Unable to load Prelude");
+        String agv[] = {"hugs","-98"};
+	enablePrintPrompt = 0;
+	initialize(1,agv);
+	
+    }
 
 }
 

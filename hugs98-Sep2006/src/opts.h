@@ -92,6 +92,8 @@ extern String preprocessor;             /* preprocessor command            */
 
 extern Bool   printing;                 /* TRUE => currently printing value*/
 
+extern Bool   enablePrintPrompt;
+
 /* 
  * How to add a new flag / option:
  *
