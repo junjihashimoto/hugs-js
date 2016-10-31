@@ -197,7 +197,7 @@ typedef struct {
   HugsStablePtr  (*lookupName)     (char*, char*);
   void           (*ap)             (int);
   void           (*getUnit)        (void);
-  HsFunPtr       (*mkThunk)        (HsFunPtr2, HugsStablePtr);
+  HsFunPtr       (*mkThunk)        (HsFunPtr2, HugsStablePtr, char*);
   void           (*freeThunk)      (void*);
 
   HugsStablePtr  (*makeStablePtr4) (void);
@@ -260,7 +260,7 @@ typedef struct {
   HugsStablePtr  (*lookupName)     (char*, char*);
   void           (*ap)             (int);
   void           (*getUnit)        (void);
-  void*          (*mkThunk)        (HsFunPtr, HugsStablePtr);
+  HsFunPtr       (*mkThunk)        (HsFunPtr2, HugsStablePtr, char*);
   void           (*freeThunk)      (void*);
   HsBool         (*getBool)        (void);
   void           (*putBool)        (HsBool);

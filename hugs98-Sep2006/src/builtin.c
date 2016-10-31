@@ -1962,7 +1962,7 @@ struct thunk_data {
 #endif
 };
 
-static HsFunPtr mkThunk(HsFunPtr2 app, HugsStablePtr s);
+static HsFunPtr mkThunk(HsFunPtr2 app, HugsStablePtr s, String type_list);
 //static void* mkThunk      Args((void (*)(void), HugsStablePtr));
 static void freeThunkAux  Args((struct thunk_data*));
 static void freeAllThunks Args((void));
@@ -2038,8 +2038,8 @@ static void local initAdjustor() {
 #endif
 }
 
-extern HsFunPtr mkFunc(HsFunPtr2 app, HugsStablePtr s);
-static HsFunPtr mkThunk(HsFunPtr2 app, HugsStablePtr s) {
+extern HsFunPtr mkFunc(HsFunPtr2 app, HugsStablePtr s, String type_list);
+static HsFunPtr mkThunk(HsFunPtr2 app, HugsStablePtr s, String type_list) {
     /* The code part of the thunk_data needs to be marked as executable,
        but it's simple to do the whole struct. */
     struct thunk_data* thunk
@@ -2185,7 +2185,7 @@ static HsFunPtr mkThunk(HsFunPtr2 app, HugsStablePtr s) {
     //    ERRMSG(0) "Foreign import wrapper is not supported on this architecture"
     //    EEND;
     {
-      thunk->code = mkFunc(app,s);
+      thunk->code = mkFunc(app,s,type_list);
 
     }
 #endif

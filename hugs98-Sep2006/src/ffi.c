@@ -26,6 +26,7 @@ static Void local foreignType    Args((Int,Type));
 #ifdef DOTNET
 static Cell local foreignTypeTag Args((Int,Type));
 #endif
+static char local foreignTypeForJS Args((Int,Type));
 static Void local foreignGet     Args((Int,Type,String,Int));
 static Void local foreignPut     Args((Int,Type,String,Int));
 static Void local ffiInclude     Args((Text));
@@ -33,6 +34,7 @@ static Void local ffiDeclare     Args((Int,Type,String,Int));
 static Void local ffiDeclareList Args((Int,List,String));
 static Void local foreignType    Args((Int,Type));
 static Void local ffiGetList     Args((Int,List,String));
+static Void local ffiPutListForJS  Args((Int,List,String));
 static Void local ffiPutList     Args((Int,List,String));
 static Void local ffiCallFun     Args((Int,Text,List,List));
 static Void local ffiDeclareFun  Args((Int,Text,Bool,Bool,List,Type));
@@ -313,6 +315,41 @@ Type   t; {
    }
 }
 
+static char local foreignTypeForJS(l,t)
+Int    l;
+Type   t; {
+    if (t == typeUnit)        return 'v';
+    else if (t == typeChar)   return 'i';
+    else if (t == typeInt)    return 'i';
+    else if (t == typeInt8)   return 'i';
+    else if (t == typeInt16)  return 'i';
+    else if (t == typeInt32)  return 'i';
+    else if (t == typeInt64)  return 'i';
+    else if (t == typeWord8)  return 'i';
+    else if (t == typeWord16) return 'i';
+    else if (t == typeWord32) return 'i';
+    else if (t == typeWord64) return 'i';
+    else if (t == typeFloat)  return 'd';
+    else if (t == typeDouble) return 'd';
+    else if (t == typeBool)   return 'i';
+    else if (t == typeAddr)   return 'i';
+    else if (getHead(t) == typePtr)    return 'i';
+    else if (getHead(t) == typeFunPtr) return 'i';
+    else if (getHead(t) == typeForeign)return 'i';
+    else if (getHead(t) == typeStable) return 'i';
+#ifdef DOTNET
+    else if (getHead(t) == typeObject) return 'i';
+#endif
+    else {
+        ERRMSG(l) "Illegal outbound (away from Haskell) type" ETHEN
+        ERRTEXT " \"" ETHEN ERRTYPE(t);
+        ERRTEXT "\""
+        EEND;
+   }
+}
+
+
+
 static Void local foreignGet(l,t,nm,num)
 Int    l;
 Type   t; 
@@ -434,6 +471,17 @@ String prefix; {
         foreignGet(line,hd(tys),prefix,i);
     }
 }
+
+static Void local ffiPutListForJS(line,tys,prefix)    /* Put values to Haskell */
+Int    line;
+List   tys;
+String prefix; {
+    Int  i;
+    for(i=2; nonNull(tys); tys=tl(tys),++i) {
+        prefix[i]=foreignTypeForJS(line,hd(tys));
+    }
+}
+
 
 static Void local ffiPutList(line,tys,prefix)    /* Put values to Haskell */
 Int    line;
@@ -737,6 +785,8 @@ List argTys;
 Bool isIO;
 Type resultTy; {
     /* Prototype for function we're generating */
+    char ffitype_list[256];
+    memset(ffitype_list,0,sizeof(ffitype_list));
     fprintf(out,"\nstatic ");
     ffiDeclareFun(line,e,FALSE,TRUE,argTys,resultTy);
     fprintf(out,";\n");
@@ -769,11 +819,16 @@ Type resultTy; {
 
     ffiPrimProto(e,id);
     ffiPrimHeader(e,id);
+
+    ffitype_list[0]=foreignTypeForJS(line,resultTy);
+    ffitype_list[1]='i';
+    ffiPutListForJS(line,argTys,ffitype_list);
     fprintf(out,
             "{\n"
             "    HugsStablePtr arg1 = hugs->makeStablePtr4();\n"
-            "    void* thunk = hugs->mkThunk((HsFunPtr2)%s,arg1);\n",
-            textToStr(e)
+            "    void* thunk = hugs->mkThunk((HsFunPtr2)%s,arg1,\"%s\");\n",
+            textToStr(e),
+            ffitype_list
             );
     fprintf(out,
             "    hugs->putAddr(thunk);\n"
