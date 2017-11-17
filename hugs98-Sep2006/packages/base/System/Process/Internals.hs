@@ -154,7 +154,7 @@ foreign import stdcall unsafe "CloseHandle"
 foreign import ccall unsafe "pPrPr_disableITimers"
   pPrPr_disableITimers :: IO ()
 
-foreign import ccall unsafe "execvpe"
+foreign import ccall unsafe "my_execvpe"
   c_execvpe :: CString -> Ptr CString -> Ptr CString -> IO CInt
 
 #endif

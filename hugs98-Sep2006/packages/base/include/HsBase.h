@@ -151,7 +151,7 @@ extern HsInt nocldstop;
 
 #if !defined(_MSC_VER) && !defined(__MINGW32__) && !defined(_WIN32)
 /* in execvpe.c */
-extern int execvpe(char *name, char *const argv[], char **envp);
+extern int my_execvpe(char *name, char *const argv[], char **envp);
 extern void pPrPr_disableITimers (void);
 #endif
 

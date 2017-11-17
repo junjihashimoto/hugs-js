@@ -54,7 +54,7 @@
  */
 
 int
-execvpe(char *name, char *const argv[], char **envp)
+my_execvpe(char *name, char *const argv[], char **envp)
 {
     register int lp, ln;
     register char *p;

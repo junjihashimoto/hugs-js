@@ -70,9 +70,9 @@ runProcess (char *const args[], char *workingDirectory, char **environment,
 	dup2 (fdStdError,  STDERR_FILENO);
 	
 	if (environment) {
-	    execvpe(args[0], args, environment);
+	    my_execvpe(args[0], args, environment);
 	} else {
-	    execvp(args[0], args);
+	    my_execvp(args[0], args);
 	}
     }
     _exit(127);
