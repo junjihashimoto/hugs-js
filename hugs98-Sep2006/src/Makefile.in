@@ -28,6 +28,7 @@ OPTFLAGS	= @OPTFLAGS@
 
 LD		= @LD@
 LDFLAGS    	= @LDFLAGS@  @LDDEBUGFLAGS@
+BASELIB    	= ../packages/base/cbits/libHSbase_cbits.o
 LIBS		= @LIBS@
 
 YACC		= @YACC@
@@ -89,11 +90,11 @@ all		:: hugs.js runhugs.js ffihugs.js
 # Hugs interpreter and standalone evaluator
 ################################################################
 
-hugs.bc	: $(IOBJECTS) $(WOBJECTS) $(RC_FILES)
-		  $(CC) $(LDFLAGS) $(IOBJECTS) $(WOBJECTS) $(LIBS) -o hugs.bc
+hugs.bc	: $(IOBJECTS) $(WOBJECTS) $(RC_FILES) $(BASELIB)
+		  $(CC) $(LDFLAGS) $(IOBJECTS) $(WOBJECTS) $(LIBS) $(BASELIB) -o hugs.bc
 
-hugs.js : hugs.bc library_hugs.js
-		  $(CC) -O2 hugs.bc -o hugs.js --memory-init-file 0 -s TOTAL_MEMORY=268435456 -s MAIN_MODULE=1 --js-library library_hugs.js
+hugs.js : hugs.bc library_hugs.js libem.js
+		  $(CC) -O2 hugs.bc -o hugs.js --memory-init-file 0 -s TOTAL_MEMORY=268435456 -s MAIN_MODULE=1 -s WASM=1 --js-library library_hugs.js --js-library libem.js --pre-js pre.js
 
 
 
@@ -104,18 +105,18 @@ version.$(OBJEXT) : version.c $(SOURCES)
 		      -c $(CFLAGS) $(OPTFLAGS) $<
 
 SERVER_OBJECTS	= server.$(OBJEXT) $(OBJECTS) 
-runhugs.bc : runhugs.$(OBJEXT) $(SERVER_OBJECTS)
-		  $(CC) $(LDFLAGS) runhugs.$(OBJEXT) $(SERVER_OBJECTS) $(LIBS) -o runhugs.bc
+runhugs.bc : runhugs.$(OBJEXT) $(SERVER_OBJECTS) $(BASELIB)
+		  $(CC) $(LDFLAGS) runhugs.$(OBJEXT) $(SERVER_OBJECTS) $(LIBS) $(BASELIB) -o runhugs.bc
 
-runhugs.js : runhugs.bc library_hugs.js
-		  $(CC) -O2 runhugs.bc -o runhugs.js --memory-init-file 0 -s TOTAL_MEMORY=268435456 -s MAIN_MODULE=1 --js-library library_hugs.js
+runhugs.js : runhugs.bc library_hugs.js libem.js
+		  $(CC) -O2 runhugs.bc -o runhugs.js --memory-init-file 0 -s TOTAL_MEMORY=268435456 -s MAIN_MODULE=1 -s WASM=1 --js-library library_hugs.js --js-library libem.js --pre-js pre.js
 
 
-ffihugs.bc : ffihugs.$(OBJEXT) $(SERVER_OBJECTS)
-		  $(CC) $(LDFLAGS) ffihugs.$(OBJEXT) $(SERVER_OBJECTS) $(LIBS) -o ffihugs.bc
+ffihugs.bc : ffihugs.$(OBJEXT) $(SERVER_OBJECTS) $(BASELIB)
+		  $(CC) $(LDFLAGS) ffihugs.$(OBJEXT) $(SERVER_OBJECTS) $(LIBS) $(BASELIB) -o ffihugs.bc
 
-ffihugs.js : ffihugs.bc library_hugs.js
-		  $(CC) -O2 ffihugs.bc -o ffihugs.js --memory-init-file 0 -s TOTAL_MEMORY=268435456 -s MAIN_MODULE=1 --js-library library_hugs.js
+ffihugs.js : ffihugs.bc library_hugs.js libem.js
+		  $(CC) -O2 ffihugs.bc -o ffihugs.js --memory-init-file 0 -s TOTAL_MEMORY=268435456 -s MAIN_MODULE=1 -s WASM=1 --js-library library_hugs.js --js-library libem.js --pre-js pre.js
 
 ffihugs.$(OBJEXT) : runhugs.$(OBJEXT)
 		  $(CC) -c $(CFLAGS) $(OPTFLAGS) -DFFI_COMPILER runhugs.c -o ffihugs.$(OBJEXT)

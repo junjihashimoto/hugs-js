@@ -8,7 +8,7 @@ This project is porting hugs98 to emscripten.
 All commands(hugs, runhugs and ffihugs) can execute on node-js.
 
 
-# Install
+# Install from source
 
 Install emscripten and setup it.
 
@@ -19,7 +19,7 @@ cd emsdk && ./emsdk activate sdk-incoming-64bit
 source ./emsdk/emsdk_env.sh
 ```
 
-Build hugs-js
+When you Build hugs-js
 
 ```
 make

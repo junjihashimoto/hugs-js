@@ -44,6 +44,7 @@ DARCS_GET	= darcs get --partial
 # details of the bootstrapping of the libraries.
 
 all: $(PACKAGES) src/Makefile
+	cd packages/base/cbits; emcc -O2 -o libHSbase_cbits.o consUtils.c dirUtils.c execvpe.c fpstring.c HsBase.c inputReady.c lockFile.c longlong.c PrelIOUtils.c runProcess.c selectUtils.c timeUtils.c WCsubst.c -I ../../../ghc/includes -I ../include -I ../../../src
 	cd src; $(MAKE) all
 	cd libraries; $(MAKE) all
 	cd docs; $(MAKE) all

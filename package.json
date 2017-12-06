@@ -1,10 +1,10 @@
 {
   "name": "emhugs",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "haskell interpreter(hugs) using emscripten",
   "main": "index.js",
   "scripts": {
-    "test": "runhugs test.hs"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -22,17 +22,24 @@
   },
   "homepage": "https://github.com/junjihashimoto/hugs-js",
   "files": [
-      "index.js",
-      "js/hugs.js",
-      "hugs98-Sep2006/hugs-dir",
-      "hugs98-Sep2006/src/ffihugs.js",
-      "hugs98-Sep2006/src/runhugs.js",
-      "hugs98-Sep2006/src/hugs.js",
-      "bin"
+    "index.js",
+    "js/hugs.js",
+    "js/hugs.wasm",
+    "hugs98-Sep2006/hugsdir",
+    "hugs98-Sep2006/src/ffihugs.js",
+    "hugs98-Sep2006/src/ffihugs.wasm",
+    "hugs98-Sep2006/src/hugs.js",
+    "hugs98-Sep2006/src/hugs.wasm",
+    "hugs98-Sep2006/src/runhugs.js",
+    "hugs98-Sep2006/src/runhugs.wasm",
+    "bin"
   ],
-  "bin" : {
-      "ffihugs" : "./bin/ffihugs",
-      "runhugs" : "./bin/runhugs",
-      "hugs"    : "./bin/hugs"
+  "bin": {
+    "ffihugs": "./bin/ffihugs",
+    "runhugs": "./bin/runhugs",
+    "hugs": "./bin/hugs"
+  },
+  "devDependencies": {
+    "mocha": "~1.7.4"
   }
 }

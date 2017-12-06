@@ -17,9 +17,9 @@ module PosixProcPrim
     ProcessStatus(..),
 
     addSignal,
-#ifndef cygwin32_HOST_OS
-    awaitSignal,
-#endif
+-- #ifndef cygwin32_HOST_OS
+--     awaitSignal,
+-- #endif
     backgroundRead,
     backgroundWrite,
     blockSignals,

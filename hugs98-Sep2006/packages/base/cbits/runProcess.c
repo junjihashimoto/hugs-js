@@ -6,6 +6,7 @@
 
 #include "HsBase.h"
 
+
 #if defined(_MSC_VER) || defined(__MINGW32__) || defined(_WIN32)
 #include <windows.h>
 #include <stdlib.h>
@@ -72,7 +73,7 @@ runProcess (char *const args[], char *workingDirectory, char **environment,
 	if (environment) {
 	    my_execvpe(args[0], args, environment);
 	} else {
-	    my_execvp(args[0], args);
+	    my_execvpe(args[0], args, NULL);
 	}
     }
     _exit(127);
@@ -135,9 +136,9 @@ runInteractiveProcess (char *const args[],
 	
 	/* the child */
 	if (environment) {
-	    execvpe(args[0], args, environment);
+	    my_execvpe(args[0], args, environment);
 	} else {
-	    execvp(args[0], args);
+	    my_execvpe(args[0], args,NULL);
 	}
     }
     _exit(127);

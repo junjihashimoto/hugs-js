@@ -9,8 +9,8 @@
 #if !(defined(_MSC_VER) || defined(__MINGW32__) || defined(_WIN32))
 
 #include "HsBase.h"
-#include "Rts.h"
-#include "RtsUtils.h"
+//#include "Rts.h"
+//#include "RtsUtils.h"
 
 typedef struct {
     dev_t device;
@@ -31,7 +31,8 @@ lockFile(int fd, int for_writing, int exclusive)
     int i;
 
     if (fd > FD_SETSIZE) {
-	barf("lockFile: fd out of range");
+            //barf("lockFile: fd out of range");
+	return -1;
     }
 
     while (fstat(fd, &sb) < 0) {

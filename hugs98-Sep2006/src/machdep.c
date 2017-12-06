@@ -294,7 +294,7 @@ FileName macHugsDir; /* Directory where Hugs was found. */
 # define isSLASH(c)              ((c)==SLASH)
 # define PATHSEP                 ':'
 # define isPATHSEP(x)            (*(x) == PATHSEP)
-# define DLL_ENDING              ".js"
+# define DLL_ENDING              ".wasm"
 #endif
 
 #if HAVE_GETMODULEFILENAME && !DOS && !cygwin32_HOST_OS
@@ -2382,7 +2382,7 @@ String flags; {
     insert(mkFFIFilename(i));
     insert("\"");
 
-    insert(" -s SIDE_MODULE=1");
+    insert(" -s SIDE_MODULE=1 -s WASM=1");
     insert(" -O2");
 
     /* compiler and linker flags specified on Hugs command line */
