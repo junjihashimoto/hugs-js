@@ -550,5 +550,3 @@ void *    __hscore_from_intptr (intptr_t n)  { return (void *)n; }
 uintptr_t __hscore_to_uintptr  (void *p)     { return (uintptr_t)p; }
 intptr_t  __hscore_to_intptr   (void *p)     { return (intptr_t)p; }
 
-#endif /* __HSBASE_H__ */
-

@@ -26,7 +26,7 @@ The exceptions to the rule are primops that cast to and from
 64-bit entities (these are defined in PrimOps.h)
 */
 
-#include "Rts.h"
+//#include "Rts.h"
 
 #ifdef SUPPORT_LONG_LONGS
 

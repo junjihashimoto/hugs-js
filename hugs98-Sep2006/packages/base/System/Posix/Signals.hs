@@ -76,9 +76,9 @@ module System.Posix.Signals (
 
   -- * Waiting for signals
   getPendingSignals,
-#ifndef cygwin32_HOST_OS
-  awaitSignal,
-#endif
+-- #ifndef cygwin32_HOST_OS
+--   awaitSignal,
+-- #endif
 
 #ifdef __GLASGOW_HASKELL__
   -- * The @NOCLDSTOP@ flag
@@ -486,29 +486,29 @@ getPendingSignals = do
    throwErrnoIfMinus1_ "getPendingSignals" (c_sigpending p)
   return (SignalSet fp)
 
-#ifndef cygwin32_HOST_OS
+-- #ifndef cygwin32_HOST_OS
 
--- | @awaitSignal iset@ suspends execution until an interrupt is received.
--- If @iset@ is @Just s@, @awaitSignal@ calls @sigsuspend@, installing
--- @s@ as the new signal mask before suspending execution; otherwise, it
--- calls @pause@.  @awaitSignal@ returns on receipt of a signal.  If you
--- have installed any signal handlers with @installHandler@, it may be
--- wise to call @yield@ directly after @awaitSignal@ to ensure that the
--- signal handler runs as promptly as possible.
-awaitSignal :: Maybe SignalSet -> IO ()
-awaitSignal maybe_sigset = do
-  fp <- case maybe_sigset of
-    	  Nothing -> do SignalSet fp <- getSignalMask; return fp
-    	  Just (SignalSet fp) -> return fp
-  withForeignPtr fp $ \p -> do
-  c_sigsuspend p
-  return ()
-  -- ignore the return value; according to the docs it can only ever be
-  -- (-1) with errno set to EINTR.
+-- -- | @awaitSignal iset@ suspends execution until an interrupt is received.
+-- -- If @iset@ is @Just s@, @awaitSignal@ calls @sigsuspend@, installing
+-- -- @s@ as the new signal mask before suspending execution; otherwise, it
+-- -- calls @pause@.  @awaitSignal@ returns on receipt of a signal.  If you
+-- -- have installed any signal handlers with @installHandler@, it may be
+-- -- wise to call @yield@ directly after @awaitSignal@ to ensure that the
+-- -- signal handler runs as promptly as possible.
+-- awaitSignal :: Maybe SignalSet -> IO ()
+-- awaitSignal maybe_sigset = do
+--   fp <- case maybe_sigset of
+--     	  Nothing -> do SignalSet fp <- getSignalMask; return fp
+--     	  Just (SignalSet fp) -> return fp
+--   withForeignPtr fp $ \p -> do
+--   c_sigsuspend p
+--   return ()
+--   -- ignore the return value; according to the docs it can only ever be
+--   -- (-1) with errno set to EINTR.
  
-foreign import ccall unsafe "sigsuspend"
-  c_sigsuspend :: Ptr CSigset -> IO CInt
-#endif
+-- foreign import ccall unsafe "sigsuspend"
+--   c_sigsuspend :: Ptr CSigset -> IO CInt
+-- #endif
 
 #ifdef __HUGS__
 foreign import ccall unsafe "sigdelset"
