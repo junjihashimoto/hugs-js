@@ -3,6 +3,9 @@
   "version": "2.0.0",
   "description": "haskell interpreter(hugs) using emscripten",
   "main": "index.js",
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "scripts": {
     "test": "mocha"
   },
