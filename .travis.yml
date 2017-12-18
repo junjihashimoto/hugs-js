@@ -13,4 +13,6 @@ before_install:
 
 script:
   - make
+  - npm install
+  - npm test
   - npm pack .
