@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"">
+    <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hugs compiled by Emscripten</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <script src="../js/jquery-1.11.2.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/ace.js"></script>
+    <link rel="stylesheet" href="../css/style.min.css" > 
+    <script src="../js/jstree.min.js"></script>
+    <link href="../css/docs.min.css" rel="stylesheet">
+    <link href="../css/em.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="bs-docs-header" id="content" tabindex="-1"> 
+      <div class="container"> 
+	<p>Hugs with ACE Editor</p> 
+	<p>Write haskell code. Then type ":load main.hs"</p> 
+      </div>
+    </div>
+    <div class="container"  style="border: 1px solid;">
+      <div class="row">
+        <div class="col-md-2">
+        <div class="btn-group">
+          <button type="button" class="btn" id="save-btn">
+            <span class="glyphicon glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn" id="play-btn">
+            <span class="glyphicon glyphicon glyphicon glyphicon-play" aria-hidden="true"></span>
+          </button>
+        </div>
+        </div>
+        <div class="col-md-10" ><input type="text" class="form-control" placeholder="Text input" id="filepath"></div>
+      </div>
+      <div class="row" style="border: 1px solid;">
+        <div class="col-md-4">
+          <div id="jstree">
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div id="editor" style="height: 600px"></div>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ext-language_tools.js"></script>
+          <script>
+            ace_editor = ace.edit("editor");
+            ace_editor.$blockScrolling = Infinity;
+            ace_editor.setOptions({
+              enableBasicAutocompletion: true,
+              enableSnippets: true,
+              enableLiveAutocompletion: true,
+              maxLines: Infinity,
+              minLines: 5
+            });
+            ace_editor.setTheme("ace/theme/monokai");
+            ace_editor.getSession().setMode("ace/mode/javascript");
+            ace_editor.getSession().setMode("ace/mode/haskell");
+          </script>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <textarea id="output" rows="8"></textarea>
+        </div>
+        <div class="col-md-12">
+        <form onSubmit="SendCommand();return false;">
+          Hugs &gt <input type="text" id="line" style="width:90%">
+        </form>
+        </div>
+      </div>
+    </div>
+        <script type='text/javascript' src="../module.js"></script>
+        <script>
+var ASSERTIONS = 0;
+// All functions here should be maybeExported from jsifier.js
+
+// Copied from https://github.com/strophe/strophejs/blob/e06d027/src/polyfills.js#L149
+
+// This code was written by Tyler Akins and has been placed in the
+// public domain.  It would be nice if you left this header intact.
+// Base64 code from Tyler Akins -- http://rumkin.com
+
+var keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+
+var decodeBase64 = typeof atob === 'function' ? atob : function (input) {
+  /**
+   * Decodes a base64 string.
+   * @param {String} input The string to decode.
+   */
+  var output = '';
+  var chr1, chr2, chr3;
+  var enc1, enc2, enc3, enc4;
+  var i = 0;
+  // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
+  input = input.replace(/[^A-Za-z0-9\+\/\=]/g, '');
+  do {
+    enc1 = keyStr.indexOf(input.charAt(i++));
+    enc2 = keyStr.indexOf(input.charAt(i++));
+    enc3 = keyStr.indexOf(input.charAt(i++));
+    enc4 = keyStr.indexOf(input.charAt(i++));
+
+    chr1 = (enc1 << 2) | (enc2 >> 4);
+    chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+    chr3 = ((enc3 & 3) << 6) | enc4;
+
+    output = output + String.fromCharCode(chr1);
+
+    if (enc3 !== 64) {
+      output = output + String.fromCharCode(chr2);
+    }
+    if (enc4 !== 64) {
+      output = output + String.fromCharCode(chr3);
+    }
+  } while (i < input.length);
+  return output;
+};
+
+// Converts a string of base64 into a byte array.
+// Throws error on invalid input.
+function intArrayFromBase64(s) {
+  if (typeof ENVIRONMENT_IS_NODE === 'boolean' && ENVIRONMENT_IS_NODE) {
+    var buf;
+    try {
+      buf = Buffer.from(s, 'base64');
+    } catch (_) {
+      buf = new Buffer(s, 'base64');
+    }
+    return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength);
+  }
+
+  try {
+    var decoded = decodeBase64(s);
+    var bytes = new Uint8Array(decoded.length);
+    for (var i = 0 ; i < decoded.length ; ++i) {
+      bytes[i] = decoded.charCodeAt(i);
+    }
+    return bytes;
+  } catch (_) {
+    throw new Error('Converting base64 string to bytes failed.');
+  }
+}
+
+// If filename is a base64 data URI, parses and returns data (Buffer on node,
+// Uint8Array otherwise). If filename is not a base64 data URI, returns undefined.
+function tryParseAsDataURI(filename) {
+  var dataURIPrefix = 'data:application/octet-stream;base64,';
+
+  if (!(
+    String.prototype.startsWith ?
+      filename.startsWith(dataURIPrefix) :
+      filename.indexOf(dataURIPrefix) === 0
+  )) {
+    return;
+  }
+
+  return intArrayFromBase64(filename.slice(dataURIPrefix.length));
+}
+// All functions here should be maybeExported from jsifier.js
+
+/** @type {function(string, boolean=, number=)} */
+function intArrayFromString(stringy, dontAddNull, length) {
+  var len = length > 0 ? length : lengthBytesUTF8(stringy)+1;
+  var u8array = new Array(len);
+  var numBytesWritten = stringToUTF8Array(stringy, u8array, 0, u8array.length);
+  if (dontAddNull) u8array.length = numBytesWritten;
+  return u8array;
+}
+
+function intArrayToString(array) {
+  var ret = [];
+  for (var i = 0; i < array.length; i++) {
+    var chr = array[i];
+    if (chr > 0xFF) {
+      if (ASSERTIONS) {
+        assert(false, 'Character code ' + chr + ' (' + String.fromCharCode(chr) + ')  at offset ' + i + ' not in 0x00-0xFF.');
+      }
+      chr &= 0xFF;
+    }
+    ret.push(String.fromCharCode(chr));
+  }
+  return ret.join('');
+}
+
+          var wasmURL = 'hugs.wasm';
+          var wasmXHR = new XMLHttpRequest();
+          wasmXHR.open('GET', wasmURL, true);
+          wasmXHR.responseType = 'arraybuffer';
+          wasmXHR.onload = function() {
+            if (wasmXHR.status === 200 || wasmXHR.status === 0) {
+              Module.wasmBinary = wasmXHR.response;
+            } else {
+              var wasmURLBytes = tryParseAsDataURI(wasmURL);
+              if (wasmURLBytes) {
+                Module.wasmBinary = wasmURLBytes.buffer;
+              }
+            }
+
+
+    
+              var script = document.createElement('script');
+              script.src = "./hugs.js";
+              document.body.appendChild(script);
+            };
+            wasmXHR.send(null);
+    
+    </script>
+    <script src="../js/em.js"></script>
+    <footer class="bs-docs-footer" role="contentinfo"> 
+      <div class="container"> 
+	<ul class="bs-docs-footer-links"> 
+	  <li><a href="https://github.com/junjihashimoto/hugs-js">github</a></li> 
+	</ul> 
+      </div>
+    </footer>
+  </body>
+</html>
